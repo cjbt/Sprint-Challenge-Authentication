@@ -4,21 +4,20 @@ import { getJokes } from '../store/actions';
 
 const JokesList = props => {
   useEffect(() => {
-    if (localStorage.getItem('token')) {
+    const token = localStorage.getItem('token');
+    if (token) {
       props.getJokes();
       console.log(props);
-    } else {
-      props.history.push('/login');
     }
-  }, []);
+  }, [props.loginSuccess]);
   console.log(props);
-  if (props.jokes === 0) {
-    return <h1>jokes on you</h1>;
+  if (!localStorage.getItem('token')) {
+    return <h1>jokes on you, please Login</h1>;
   } else {
     return (
       <div>
         {props.jokes.map(joke => (
-          <h2>{joke.joke}</h2>
+          <h2 key={joke.id}>{joke.joke}</h2>
         ))}
       </div>
     );
@@ -26,7 +25,8 @@ const JokesList = props => {
 };
 
 const mapStateToProps = state => ({
-  jokes: state.mainReducer.jokes
+  jokes: state.mainReducer.jokes,
+  loginSuccess: state.mainReducer.loginSuccess
 });
 
 export default connect(
