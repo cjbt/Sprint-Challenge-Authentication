@@ -28,6 +28,27 @@ function register(req, res) {
 
 function login(req, res) {
   // implement user login
+  const { username, password } = req.body;
+  if (!username || !password) {
+    res.status(422).json({ message: 'Missing username and password fields' });
+  } else {
+    db('users')
+      .where({ username })
+      .first()
+      .then(user => {
+        if (user && bcrypt.compareSync(password, user.password)) {
+          const token = jwt.sign(user, 'secret', {
+            expiresIn: 60
+          });
+          res.json({ message: `Welcome ${username}`, token });
+        } else {
+          res.status(401).json({ messag: 'Invalid Credentials' });
+        }
+      })
+      .catch(err => {
+        res.status(500).json(err);
+      });
+  }
 }
 
 function getJokes(req, res) {
