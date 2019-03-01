@@ -5,7 +5,10 @@ import {
   REGISTER_SUCCESS,
   LOGIN_FAIL,
   LOGIN_LOADING,
-  LOGIN_SUCCESS
+  LOGIN_SUCCESS,
+  JOKES_FAIL,
+  JOKES_LOADING,
+  JOKES_SUCCESS
 } from '../actions';
 
 const initialState = {
@@ -15,7 +18,10 @@ const initialState = {
   registerFail: false,
   loginLoading: false,
   loginSuccess: false,
-  loginFail: false
+  loginFail: false,
+  jokesLoading: false,
+  jokesSuccess: false,
+  jokesFail: false
 };
 
 export default function(state = initialState, action) {
@@ -53,6 +59,24 @@ export default function(state = initialState, action) {
         ...state,
         loginFail: true,
         loginLoading: false
+      };
+    case JOKES_LOADING:
+      return {
+        ...state,
+        jokesLoading: true
+      };
+    case JOKES_SUCCESS:
+      return {
+        ...state,
+        jokesSuccess: true,
+        jokesLoading: false,
+        jokes: action.payload
+      };
+    case JOKES_FAIL:
+      return {
+        ...state,
+        jokesFail: true,
+        jokesLoading: false
       };
     default:
       return state;

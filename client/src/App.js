@@ -6,7 +6,7 @@ import { Register, Login, JokesList } from './components';
 class App extends Component {
   logout = () => {
     localStorage.removeItem('token');
-    this.props.history.push('/signin');
+    this.props.history.push('/');
   };
   render() {
     return (

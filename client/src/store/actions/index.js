@@ -7,6 +7,9 @@ export const REGISTER_FAIL = 'REGISTER_FAIL';
 export const LOGIN_LOADING = 'LOGIN_LOADING';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
+export const JOKES_LOADING = 'JOKES_LOADING';
+export const JOKES_SUCCESS = 'JOKES_SUCCESS';
+export const JOKES_FAIL = 'JOKES_FAIL';
 
 const baseUrl = 'http://localhost:3300/api';
 const config = {
@@ -41,6 +44,7 @@ export const login = ({ username, password }) => dispatch => {
   axios
     .post(`${baseUrl}/login`, { username, password })
     .then(res => {
+      localStorage.setItem('token', res.data.token);
       dispatch({
         type: LOGIN_SUCCESS
       });
@@ -48,6 +52,25 @@ export const login = ({ username, password }) => dispatch => {
     .catch(() => {
       dispatch({
         type: LOGIN_FAIL
+      });
+    });
+};
+
+export const getJokes = () => dispatch => {
+  dispatch({
+    type: JOKES_LOADING
+  });
+  axios
+    .get(`${baseUrl}/jokes`, config)
+    .then(res => {
+      dispatch({
+        type: JOKES_SUCCESS,
+        payload: res.data
+      });
+    })
+    .catch(() => {
+      dispatch({
+        type: JOKES_FAIL
       });
     });
 };
