@@ -1,6 +1,8 @@
 const axios = require('axios');
-
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { authenticate } = require('../auth/authenticate');
+const db = require('../database/dbConfig');
 
 module.exports = server => {
   server.post('/api/register', register);
@@ -10,6 +12,18 @@ module.exports = server => {
 
 function register(req, res) {
   // implement user registration
+  const { username, password } = req.body;
+  if (!username || !password) {
+    res.status(422).json({ message: 'Missing username and password fields' });
+  } else {
+    const hash = bcrypt.hashSync(password, 10);
+    db('users')
+      .insert({ username, password: hash })
+      .then(user => {
+        res.json({ message: `You have registered, ${username}!` });
+      })
+      .catch(err => res.status(500).json(err));
+  }
 }
 
 function login(req, res) {
@@ -18,7 +32,7 @@ function login(req, res) {
 
 function getJokes(req, res) {
   const requestOptions = {
-    headers: { accept: 'application/json' },
+    headers: { accept: 'application/json' }
   };
 
   axios
