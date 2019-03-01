@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { register } from '../store/actions';
 
 const Register = props => {
   const [username, setUsername] = useState('');
@@ -6,6 +8,10 @@ const Register = props => {
 
   const handleSubmit = e => {
     e.preventDefault();
+    props.register({ username, password });
+    setUsername('');
+    setPassword('');
+    props.history.push('/login');
   };
   return (
     <form onSubmit={handleSubmit}>
@@ -27,4 +33,7 @@ const Register = props => {
   );
 };
 
-export default Register;
+export default connect(
+  null,
+  { register }
+)(Register);
