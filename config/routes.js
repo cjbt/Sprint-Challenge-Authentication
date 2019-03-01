@@ -37,8 +37,8 @@ function login(req, res) {
       .first()
       .then(user => {
         if (user && bcrypt.compareSync(password, user.password)) {
-          const token = jwt.sign(user, 'secret', {
-            expiresIn: 60
+          const token = jwt.sign(user, process.env.JWT_SECRET, {
+            expiresIn: `30 days`
           });
           res.json({ message: `Welcome ${username}`, token });
         } else {
